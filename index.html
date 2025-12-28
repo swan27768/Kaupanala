@@ -1605,15 +1605,26 @@ body.cover-active .cover-page {
 })();
 
 window.confirmExit = function () {
-  const varmistus = confirm("Haluatko varmasti poistua esityksestä?");
-  if (varmistus) {
-    try {
-      window.close();
-    } catch (e) {
-      alert("Voit sulkea esityksen sulkemalla tämän välilehden.");
+  const varmistus = confirm("Haluatko varmasti poistua ja palata aloitussivulle?");
+  if (!varmistus) return;
+
+  try {
+    /* SugarCube-safe navigointi */
+    if (window.SugarCube && SugarCube.State) {
+      SugarCube.Engine.play("Cover");
+      return;
     }
-  }
+  } catch (e) {}
+
+  /* Fallback (jos ei SugarCubea, esim. iframe / Sites) */
+  try {
+    window.location.hash = "#Cover";
+  } catch (e) {}
+
+  /* Viimeinen fallback */
+  window.location.href = window.location.href.split('#')[0] + "#Cover";
 };
+
 window.downloadAmmattitutkimus = function () {
   const v = State.variables;
 
@@ -1822,7 +1833,12 @@ Kiinteistövälittäjä ei vastaa kiinteistöjen huollosta tai sisustuksesta, va
   
 &lt;/div&gt;
 ​
-</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="775,100" size="100,100">&lt;&lt;set $pisteet = 0&gt;&gt;
+</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="775,100" size="100,100">&lt;&lt;script&gt;&gt;
+State.reset();
+Engine.play(&quot;start&quot;);
+&lt;&lt;/script&gt;&gt;
+
+&lt;&lt;set $pisteet = 0&gt;&gt;
 &lt;&lt;set $maxKysymykset = 10&gt;&gt;
 
 &lt;&lt;set $q1Done = false&gt;&gt;
@@ -3172,9 +3188,10 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     Jatka rohkeasti tutustumista eri ammatteihin ja koulutuksiin – tulevaisuus on avoin.
   &lt;/p&gt;
 
-  &lt;div class=&quot;result-btn-area&quot;&gt;
-    &lt;button class=&quot;exit-btn&quot; onclick=&quot;window.confirmExit()&quot;&gt;Poistu&lt;/button&gt;
-  &lt;/div&gt;
+ &lt;div class=&quot;result-btn-area&quot;&gt;
+  &lt;button class=&quot;exit-btn&quot; onclick=&quot;confirmExit()&quot;&gt;Poistu&lt;/button&gt;
+&lt;/div&gt;
+
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="43" name="Asiakaspalvelutesti" tags="" position="300,150" size="100,100">
 &lt;&lt;set $ap = 0&gt;&gt;
@@ -4163,13 +4180,13 @@ Halutessasi voit tutkia useampia ammatteja, katsoa videoita ja lukea lisää kau
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="71" name="Cover" tags="" position="600,50" size="100,100">&lt;div class=&quot;cover-page&quot; role=&quot;button&quot; tabindex=&quot;0&quot;&gt;
+</tw-passagedata><tw-passagedata pid="71" name="Cover" tags="" position="600,50" size="100,100">&lt;&lt;script&gt;&gt;
+State.reset();
+&lt;&lt;/script&gt;&gt;
+&lt;div class=&quot;cover-page&quot; role=&quot;button&quot; tabindex=&quot;0&quot;&gt;
 
   &lt;h1 class=&quot;cover-title&quot;&gt;Kauppa ja hallinto&lt;/h1&gt;
-
-  
-&lt;/div&gt;
-
+ &lt;/div&gt;
 &lt;&lt;script&gt;&gt;
 /* Aktivoidaan kansitila */
 $(&#39;body&#39;).addClass(&#39;cover-active&#39;);
