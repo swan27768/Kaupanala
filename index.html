@@ -200,12 +200,6 @@ a:active {
    4. PERUSASETUKSET JA SUGARCUBE-RUNKO
    ============================================================ */
 
-
-/* tilaa kiinteälle yläpalkille */
-body {
-  padding-top: 64px;
-}
-
 /* Piilota SugarCuben oletussivupalkki */
 #ui-bar {
   display: none;
@@ -722,94 +716,6 @@ button,
   transform: translateY(-1px);
 }
 
-
-/* ============================================================
-   9. KIINTEÄ YLÄPALKKI (EDELLINEN / SEURAAVA / POISTU)
-   ============================================================ */
-
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
-}
-
-/* Yhteinen nappityyli navipainikkeille */
-.nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem 0.9rem;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(90deg, var(--brand-main), #ff8c42);
-  color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease;
-}
-
-.nav-btn:hover:not(.nav-btn-disabled),
-.nav-btn:focus-visible:not(.nav-btn-disabled) {
-  outline: none;
-  filter: brightness(1.04);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.46);
-}
-
-/* Pois käytöstä -tila */
-.nav-btn-disabled {
-  opacity: 0.4;
-  cursor: default;
-  box-shadow: none;
-  transform: none;
-  filter: none;
-  pointer-events: none;
-}
-
-/* Poistu-nappi navipalkissa – hillitympi tyyli */
-.nav-exit-btn {
-  background: #ffffff;
-  color: var(--brand-dark);
-  border: 1px solid #d1d5db;
-  box-shadow: none;
-}
-
-.nav-exit-btn:hover,
-.nav-exit-btn:focus-visible {
-  background: #f3f4f6;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
-}
-
-/* Mobiili */
-@media (max-width: 640px) {
-  .navbar-fixed {
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0.4rem 0.75rem;
-    gap: 0.35rem;
-  }
-
-  .nav-btn {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.7rem;
-  }
-}
 
 /* ============================================================
    10. VALIKON KORTIT (2 korttia vierekkäin)
@@ -1367,8 +1273,6 @@ button,
   }
 }
 
-
-
 /* ============================================================
    15. JUOKSEVA RIVI – KAUPAN ALAN AMMATTITICKER
    ============================================================ */
@@ -1530,29 +1434,7 @@ button,
     display: none;
   }
 }
-/* ===============================
-   KANSI – KOKO SIVU
-   =============================== */
 
-/* Aktiivinen kansitila */
-body.cover-active {
-    background-color: #e8f3f4;
-}
-
-/* Piilotetaan navbar vain kansisivulla */
-body.cover-active #ui-bar {
-    display: none !important;
-}
-
-/* Poistetaan Twinen sisällön taustat */
-body.cover-active #story,
-body.cover-active #passages {
-    background: transparent !important;
-}
-/* Piilotetaan navbar kansisivulla */
-.cover-page .navbar-fixed {
-    display: none !important;
-}
 /* ===============================
    KANSI – KOKO SIVU (COVER)
    =============================== */
@@ -1562,11 +1444,6 @@ body.cover-active {
     background-color: #e8f3f4;
 }
 
-/* Piilotetaan navbar vain kansisivulla */
-body.cover-active #ui-bar,
-body.cover-active .navbar-fixed {
-    display: none !important;
-}
 
 /* Poistetaan Twinen sisällön taustat */
 body.cover-active #story,
@@ -1624,141 +1501,34 @@ body.cover-active .cover-page {
     position: fixed;
     inset: 0;
 }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Kiinteä navigointipalkki nuolineen SugarCube 2:lle */
 
-(function () {
-  function createNavBar() {
-    // Älä luo toista palkkia jos se on jo olemassa
-    if (document.querySelector(".navbar-fixed")) {
-      return;
-    }
+#simple-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 999999;
+}
 
-    const nav = document.createElement("div");
-    nav.className = "navbar-fixed";
-
-    // Taaksepäin-nappi
-    const back = document.createElement("button");
-    back.id = "nav-back";
-    back.className = "nav-btn";
-    back.textContent = "← Edellinen sivu";
-    back.addEventListener("click", function () {
-      // SugarCube 2: Engine.backward()
-      Engine.backward();
-    });
-
-    // Eteenpäin-nappi
-    const fwd = document.createElement("button");
-    fwd.id = "nav-forward";
-    fwd.className = "nav-btn";
-    fwd.textContent = "Seuraava sivu →";
-    fwd.addEventListener("click", function () {
-      // SugarCube 2: Engine.forward()
-      Engine.forward();
-    });
-
-    nav.appendChild(back);
-    nav.appendChild(fwd);
-    document.body.appendChild(nav);
-  }
-
-  function updateNavButtons() {
-    const back = document.getElementById("nav-back");
-    const fwd = document.getElementById("nav-forward");
-
-    if (!back || !fwd) {
-      return;
-    }
-
-    // VOIKO MENNÄ TAAKSEPÄIN?
-    // State.length = kuinka monessa "momentissa" ollaan (mennyt + nykyinen)
-    const canGoBack = State.length > 1;
-
-    // VOIKO MENNÄ ETEENPÄIN?
-    // State.size = koko historian pituus, length < size → on "tulevaisuutta"
-    const canGoForward = State.length < State.size;
-
-    if (canGoBack) {
-      back.classList.remove("nav-btn-disabled");
-    } else {
-      back.classList.add("nav-btn-disabled");
-    }
-
-    if (canGoForward) {
-      fwd.classList.remove("nav-btn-disabled");
-    } else {
-      fwd.classList.add("nav-btn-disabled");
-    }
-  }
-
-  // Luodaan navigointipalkki ja päivitetään sen tila joka passage-vaihdoksessa
-  $(document).on(":passagestart", function () {
-    createNavBar();
-    updateNavButtons();
-  });
-})();
-
-/* AUTOMAATTINEN POISTU-NAPPI YLÄPALKISSA */
-
-(function () {
-
-  function addExitButton() {
-    // Tarkista onko nappi jo tehty
-    if (document.getElementById("nav-exit")) {
-      return;
-    }
-
-    const nav = document.querySelector(".navbar-fixed");
-    if (!nav) return;
-
-    // Luodaan nappi
-    const exitBtn = document.createElement("button");
-    exitBtn.id = "nav-exit";
-    exitBtn.className = "nav-btn nav-exit-btn";
-    exitBtn.textContent = "Poistu";
-
-    // Varmistuskysely
-    exitBtn.addEventListener("click", function () {
-      const varmistus = confirm("Haluatko varmasti poistua esityksestä?");
-      if (varmistus) {
-        try {
-          window.close();
-        } catch (e) {
-          alert("Voit sulkea esityksen sulkemalla tämän välilehden.");
-        }
-      }
-    });
-
-    // Lisätään nappi oikeaan reunaan
-    nav.appendChild(exitBtn);
-  }
-
-  // Luodaan nappi aina passagen vaihtuessa
-  $(document).on(":passagestart", function () {
-    addExitButton();
-  });
-
-})();
-
-window.confirmExit = function () {
-  const varmistus = confirm("Haluatko varmasti poistua ja palata aloitussivulle?");
-  if (!varmistus) return;
-
-  try {
-    /* SugarCube-safe navigointi */
-    if (window.SugarCube && SugarCube.State) {
-      SugarCube.Engine.play("Cover");
-      return;
-    }
-  } catch (e) {}
-
-  /* Fallback (jos ei SugarCubea, esim. iframe / Sites) */
-  try {
-    window.location.hash = "#Cover";
-  } catch (e) {}
-
-  /* Viimeinen fallback */
-  window.location.href = window.location.href.split('#')[0] + "#Cover";
-};
+#simple-topbar button {
+  background: #ff6b35;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
 
 /* ===========================================
    AMMATTITUTKIMUS – TALLENNUS, TYHJENNYS, LATAUS
@@ -1831,29 +1601,29 @@ window.downloadAmmattitutkimus = function () {
   a.click();
   document.body.removeChild(a);
 };
-</script><tw-passagedata pid="1" name="intro-sivu" tags="" position="625,175" size="100,100">&lt;div class=&quot;intro-sivu&quot;&gt;
+</script><tw-passagedata pid="1" name="intro-sivu" tags="" position="600,50" size="100,100">
+&lt;div class=&quot;intro-sivu&quot;&gt;
   &lt;h1&gt;Kaupan  ala&lt;/h1&gt;
   &lt;hr&gt;
-
   &lt;p&gt;
 Kaupan alalla työskennellään muun muassa liike-elämän, taloushallinnon sekä vakuutus- ja rahoitusalan tehtävissä. Työpaikkoja voivat olla esimerkiksi kaupat, yritykset, tilitoimistot, pankit, vakuutusyhtiöt, kirjastot ja erilaiset virastot. Alalla  korostuvat huolellisuus, järjestelmällisyys, yhteistyötaidot, stressinsietokyky ja rohkeus ottaa harkittuja riskejä. Myös asiakaspalvelutaidot ovat keskeisiä – kaupan alalla kohdataan hyvin erilaisia  ihmisiä ja tavoitteena on rakentaa toimivia ja luottamuksellisia asiakassuhteita.
   &lt;/p&gt;
 
-&lt;div class=&quot;intro-nappi-main&quot;&gt;
-  &lt;span class=&quot;btn-next&quot;&gt;
-    &lt;&lt;link &quot;Sopiiko kaupan ala sinulle - Testaa!&quot;&gt;&gt;
-      &lt;&lt;goto &quot;Testivalikko&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
-  &lt;/span&gt;
-&lt;/div&gt;
-
-
+  &lt;div class=&quot;intro-nappi-main&quot;&gt;
+    &lt;span class=&quot;btn-next&quot;&gt;
+      &lt;&lt;link &quot;Sopiiko kaupan ala sinulle - Testaa!&quot;&gt;&gt;
+        &lt;&lt;goto &quot;Testivalikko&quot;&gt;&gt;
+      &lt;&lt;/link&gt;&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
 
 &lt;/div&gt;
+
+
 
 &gt;
 
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="625,400" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="600,325" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 1/10&lt;/span&gt;
 
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -1885,7 +1655,7 @@ Kaupan alalla työskennellään muun muassa liike-elämän, taloushallinnon sek�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="3" name="Oikein 1" tags="" position="575,500" size="100,100">&lt;&lt;if not $q1Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="3" name="Oikein 1" tags="" position="550,425" size="100,100">&lt;&lt;if not $q1Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q1Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -1915,7 +1685,7 @@ Kiinteistövälittäjän tehtävänä on myydä tai vuokrata asuntoja ja muita k
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Väärin 1" tags="" position="700,500" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="4" name="Väärin 1" tags="" position="650,425" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 1&lt;/h1&gt;
   &lt;hr&gt;
@@ -1939,7 +1709,7 @@ Kiinteistövälittäjä ei vastaa kiinteistöjen huollosta tai sisustuksesta, va
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="Kysymys 2" tags="" position="512.5,625" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="5" name="Kysymys 2" tags="" position="600,525" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 2/10&lt;/span&gt;
 ​
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -1972,7 +1742,7 @@ Kiinteistövälittäjä ei vastaa kiinteistöjen huollosta tai sisustuksesta, va
   
 &lt;/div&gt;
 ​
-</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="775,100" size="100,100">&lt;&lt;script&gt;&gt;
+</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="725,25" size="100,100">&lt;&lt;script&gt;&gt;
 State.reset();
 Engine.play(&quot;Cover&quot;);
 &lt;&lt;/script&gt;&gt;
@@ -2001,7 +1771,7 @@ Engine.play(&quot;start&quot;);
 
 &lt;&lt;set $test1Done = false&gt;&gt;
 &lt;&lt;set $test2Done = false&gt;&gt;
-</tw-passagedata><tw-passagedata pid="7" name="Väärin 2" tags="" position="425,750" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="7" name="Väärin 2" tags="" position="550,625" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 2&lt;/h1&gt;
   &lt;hr&gt;
@@ -2025,7 +1795,7 @@ Myyjä voi osallistua siisteyden ylläpitoon ja joskus myös hinnoitteluun, mutt
   &lt;/span&gt;
 &lt;/div&gt;
   
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="8" name="Oikein 2" tags="" position="575,750" size="100,100">
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="8" name="Oikein 2" tags="" position="650,625" size="100,100">
 &lt;&lt;if not $q2Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q2Done = true&gt;&gt;
@@ -2053,7 +1823,7 @@ Myyjän tärkein tehtävä on palvella asiakkaita ja auttaa heitä löytämään
 &lt;/div&gt;
  
 
-</tw-passagedata><tw-passagedata pid="9" name="Kysymys 3" tags="" position="450,875" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="9" name="Kysymys 3" tags="" position="600,700" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 3/10&lt;/span&gt;
 ​
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2085,7 +1855,7 @@ Myyjän tärkein tehtävä on palvella asiakkaita ja auttaa heitä löytämään
     &lt;/div&gt;
   
 &lt;/div&gt;
-​</tw-passagedata><tw-passagedata pid="10" name="Väärin 3" tags="" position="450,1000" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+​</tw-passagedata><tw-passagedata pid="10" name="Väärin 3" tags="" position="550,800" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 3&lt;/h1&gt;
   &lt;hr&gt;
@@ -2109,7 +1879,7 @@ Visuaalinen myynninedistäjä ei ensisijaisesti hoida kassaa tai yleistä asiaka
   &lt;/span&gt;
 &lt;/div&gt;
   
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="Oikein 3" tags="" position="575,1000" size="100,100">&lt;&lt;if not $q3Done&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="Oikein 3" tags="" position="650,800" size="100,100">&lt;&lt;if not $q3Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q3Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2134,7 +1904,7 @@ Visuaalinen myynninedistäjä vastaa myymälän ilmeestä: somistuksesta, tuotte
     &lt;&lt;/link&gt;&gt;
   &lt;/span&gt;
 &lt;/div&gt;
-  </tw-passagedata><tw-passagedata pid="12" name="Kysymys 4" tags="" position="575,1125" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+  </tw-passagedata><tw-passagedata pid="12" name="Kysymys 4" tags="" position="600,900" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 3/10&lt;/span&gt;
 ​
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2166,7 +1936,7 @@ Visuaalinen myynninedistäjä vastaa myymälän ilmeestä: somistuksesta, tuotte
     &lt;/div&gt;
   
 &lt;/div&gt;
-​</tw-passagedata><tw-passagedata pid="13" name="Väärin 4" tags="" position="500,1250" size="100,100">
+​</tw-passagedata><tw-passagedata pid="13" name="Väärin 4" tags="" position="550,1000" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 4&lt;/h1&gt;
@@ -2190,7 +1960,7 @@ Kirjanpitäjä ei suunnittele mainontaa eikä toimi myyjänä, vaan huolehtii yr
   &lt;/span&gt;
 &lt;/div&gt;
   
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="Oikein 4" tags="" position="625,1250" size="100,100">&lt;&lt;if not $q4Done&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="Oikein 4" tags="" position="650,1000" size="100,100">&lt;&lt;if not $q4Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q4Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2215,7 +1985,7 @@ Kirjanpitäjä seuraa ja kirjaa yrityksen taloudellisia tapahtumia: tuloja, meno
     &lt;&lt;/link&gt;&gt;
   &lt;/span&gt;
 &lt;/div&gt;
-  </tw-passagedata><tw-passagedata pid="15" name="Jatkatko" tags="" position="575,1375" size="100,100">
+  </tw-passagedata><tw-passagedata pid="15" name="Jatkatko" tags="" position="600,1100" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;h1&gt;Haluatko jatkaa testiä?&lt;/h1&gt;
   &lt;hr&gt;
@@ -2241,7 +2011,7 @@ Kirjanpitäjä seuraa ja kirjaa yrityksen taloudellisia tapahtumia: tuloja, meno
 &lt;/div&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="Jatka" tags="" position="512.5,1500" size="100,100">
+</tw-passagedata><tw-passagedata pid="16" name="Jatka" tags="" position="525,1200" size="100,100">
 &lt;div class=&quot;quiz-result correct&quot;&gt;
   &lt;h2&gt;Hienoa, jatketaan!&lt;/h2&gt;
   &lt;hr&gt;
@@ -2262,7 +2032,7 @@ Kirjanpitäjä seuraa ja kirjaa yrityksen taloudellisia tapahtumia: tuloja, meno
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="17" name="Alanvaihto" tags="" position="650,1500" size="100,100">&lt;div class=&quot;quiz-result wrong&quot;&gt;
+</tw-passagedata><tw-passagedata pid="17" name="Alanvaihto" tags="" position="625,1200" size="100,100">&lt;div class=&quot;quiz-result wrong&quot;&gt;
   &lt;h2&gt;Ei haittaa – kaikki alat eivät kiinnosta kaikkia!&lt;/h2&gt;
   &lt;hr&gt;
 
@@ -2280,7 +2050,7 @@ Kirjanpitäjä seuraa ja kirjaa yrityksen taloudellisia tapahtumia: tuloja, meno
   
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="18" name="Kysymys 5" tags="" position="500,1625" size="100,100">
+</tw-passagedata><tw-passagedata pid="18" name="Kysymys 5" tags="" position="575,1300" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 5/10&lt;/span&gt;
 
@@ -2313,7 +2083,7 @@ Kirjanpitäjä seuraa ja kirjaa yrityksen taloudellisia tapahtumia: tuloja, meno
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Väärin 5" tags="" position="450,1750" size="100,100">
+</tw-passagedata><tw-passagedata pid="19" name="Väärin 5" tags="" position="525,1400" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 5&lt;/h1&gt;
@@ -2340,7 +2110,7 @@ Markkinointipäällikkö ei pääsääntöisesti hoida kassatyötä tai kirjanpi
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="20" name="Oikein 5" tags="" position="575,1750" size="100,100">
+</tw-passagedata><tw-passagedata pid="20" name="Oikein 5" tags="" position="625,1400" size="100,100">
 &lt;&lt;if not $q5Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q5Done = true&gt;&gt;
@@ -2371,7 +2141,7 @@ Markkinointipäällikkö suunnittelee ja johtaa yrityksen markkinointia: kampanj
 &lt;/div&gt;
  
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Kysymys 6" tags="" position="512.5,1875" size="100,100">
+</tw-passagedata><tw-passagedata pid="21" name="Kysymys 6" tags="" position="575,1500" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 6/10&lt;/span&gt;
 
@@ -2404,7 +2174,7 @@ Markkinointipäällikkö suunnittelee ja johtaa yrityksen markkinointia: kampanj
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Oikein 6" tags="" position="450,2000" size="100,100">&lt;&lt;if not $q6Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="22" name="Oikein 6" tags="" position="525,1600" size="100,100">&lt;&lt;if not $q6Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q6Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2433,7 +2203,7 @@ Varastotyöntekijä vastaanottaa toimituksia, keräilee ja hyllyttää tuotteita
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="Väärin 6" tags="" position="575,2000" size="100,100">
+</tw-passagedata><tw-passagedata pid="23" name="Väärin 6" tags="" position="625,1600" size="100,100">
 &lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 6&lt;/h1&gt;
@@ -2455,7 +2225,7 @@ Varastotyöntekijän päätehtävät liittyvät tuotteiden vastaanottoon, keräi
   &lt;/span&gt;
 &lt;/div&gt;
   &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Kysymys 7" tags="" position="387.5,2125" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="24" name="Kysymys 7" tags="" position="575,1700" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 7/10&lt;/span&gt;
 
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2487,7 +2257,7 @@ Varastotyöntekijän päätehtävät liittyvät tuotteiden vastaanottoon, keräi
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="Oikein 7" tags="" position="325,2250" size="100,100">&lt;&lt;if not $q7Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="25" name="Oikein 7" tags="" position="550,1800" size="100,100">&lt;&lt;if not $q7Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q7Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2518,7 +2288,7 @@ Asiakaslähtöisyys tarkoittaa, että yritys tuntee asiakkaidensa tarpeet ja rak
     [[Seuraava kysymys-&gt;Kysymys 8]]
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Väärin 7" tags="" position="450,2250" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="26" name="Väärin 7" tags="" position="625,1800" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 7&lt;/h1&gt;
   &lt;hr&gt;
@@ -2542,7 +2312,7 @@ Asiakaslähtöisessä toiminnassa yritys pyrkii ymmärtämään asiakkaiden tarp
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="Kysymys 8" tags="" position="262.5,2375" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="27" name="Kysymys 8" tags="" position="575,1900" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 8/10&lt;/span&gt;
 
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2574,7 +2344,7 @@ Asiakaslähtöisessä toiminnassa yritys pyrkii ymmärtämään asiakkaiden tarp
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="28" name="Väärin 8" tags="" position="200,2500" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="28" name="Väärin 8" tags="" position="500,2000" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 8&lt;/h1&gt;
   &lt;hr&gt;
@@ -2597,7 +2367,7 @@ Asiakaslähtöisessä toiminnassa yritys pyrkii ymmärtämään asiakkaiden tarp
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Oikein 8" tags="" position="325,2500" size="100,100">&lt;&lt;if not $q8Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="29" name="Oikein 8" tags="" position="600,2000" size="100,100">&lt;&lt;if not $q8Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q8Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2626,7 +2396,7 @@ Verkkokaupan asiakaspalveluun kuuluu esimerkiksi chat- ja sähköpostituen tarjo
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="30" name="Kysymys 9" tags="" position="262.5,2625" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="30" name="Kysymys 9" tags="" position="550,2100" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 9/10&lt;/span&gt;
 
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2658,7 +2428,7 @@ Verkkokaupan asiakaspalveluun kuuluu esimerkiksi chat- ja sähköpostituen tarjo
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="31" name="Väärin 9" tags="" position="200,2750" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="31" name="Väärin 9" tags="" position="500,2200" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 9&lt;/h1&gt;
   &lt;hr&gt;
@@ -2682,7 +2452,7 @@ Kassatyön kannalta tärkeintä on huolellinen maksujen käsittely, oikeat summa
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="32" name="Oikein 9" tags="" position="325,2750" size="100,100">&lt;&lt;if not $q9Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="32" name="Oikein 9" tags="" position="600,2200" size="100,100">&lt;&lt;if not $q9Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q9Done = true&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -2710,7 +2480,7 @@ Kassatyössä korostuvat tarkkuus, huolellinen rahankäsittely ja ystävällinen
 &lt;/div&gt;
  
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="33" name="Kysymys 10" tags="" position="262.5,2875" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="33" name="Kysymys 10" tags="" position="550,2300" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Kysymys 10/10&lt;/span&gt;
 
   &lt;div class=&quot;score-pill&quot;&gt;
@@ -2742,7 +2512,7 @@ Kassatyössä korostuvat tarkkuus, huolellinen rahankäsittely ja ystävällinen
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="34" name="Väärin 10" tags="" position="200,3000" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="34" name="Väärin 10" tags="" position="500,2400" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 1 • Vastaus&lt;/span&gt;
   &lt;h1&gt;Kysymys 10&lt;/h1&gt;
   &lt;hr&gt;
@@ -2766,7 +2536,7 @@ Kaupan alalla ollaan yleensä paljon tekemisissä asiakkaiden ja työtovereiden 
 
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="35" name="Oikein 10" tags="" position="325,3000" size="100,100">
+</tw-passagedata><tw-passagedata pid="35" name="Oikein 10" tags="" position="600,2400" size="100,100">
 &lt;&lt;if not $q10Done&gt;&gt;
   &lt;&lt;set $pisteet += 1&gt;&gt;
   &lt;&lt;set $q10Done = true&gt;&gt;
@@ -2794,7 +2564,7 @@ Kaupan alalla työ on usein nopeatempoista ja sisältää paljon asiakaskontakte
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="36" name="Yhteenveto" tags="" position="250,3125" size="100,100">&lt;&lt;set $test1Done = true&gt;&gt;
+</tw-passagedata><tw-passagedata pid="36" name="Yhteenveto" tags="" position="550,2500" size="100,100">&lt;&lt;set $test1Done = true&gt;&gt;
 &lt;&lt;set _osuus = $pisteet / $maxKysymykset&gt;&gt;
 
 &lt;div class=&quot;quiz-page&quot;&gt;
@@ -2848,7 +2618,7 @@ Tämän testin perusteella kaupan alan ammatit eivät välttämättä vielä ole
 
 
 
-</tw-passagedata><tw-passagedata pid="37" name="Koulutus" tags="" position="1050,325" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="37" name="Koulutus" tags="" position="850,75" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;h1&gt;Kaupan alan koulutukset&lt;/h1&gt;
   &lt;hr&gt;
 
@@ -3081,7 +2851,7 @@ Yliopistojen kauppakorkeakouluissa opiskellaan &lt;strong&gt;kauppatieteiden kan
 
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="38" name="Opintopolku-linkki" tags="" position="775,200" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="38" name="Opintopolku-linkki" tags="" position="675,175" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;h1&gt;Opintopolku.fi &lt;/h1&gt;
   &lt;hr&gt;
   &lt;p&gt;
@@ -3107,11 +2877,18 @@ Haluatko tutkia lisää koulutusvaihtoehtoja ja hakea opiskelemaan?  Opintopolku
   &lt;/div&gt;
 
   &lt;div class=&quot;intro-nappi&quot;&gt;
- 
+
    [[Takaisin alkuun-&gt;intro-sivu]]
   &lt;/div&gt;
+  &lt;div class=&quot;intro-nappi-main&quot;&gt;
+  &lt;span class=&quot;btn-next&quot;&gt;
+    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
+      &lt;&lt;goto &quot;Cover&quot;&gt;&gt;
+    &lt;&lt;/link&gt;&gt;
+  &lt;/span&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="39" name="Ammattitutkimus" tags="" position="1200,575" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Ammattitutkimus" tags="" position="850,275" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
 
 &lt;h1&gt;Esitelmä ammatista: &lt;&lt;print $ammatti&gt;&gt;&lt;/h1&gt;
  &lt;hr&gt;
@@ -3169,7 +2946,7 @@ Haluatko tutkia lisää koulutusvaihtoehtoja ja hakea opiskelemaan?  Opintopolku
   &lt;/span&gt;
 &lt;/div&gt;
 
-</tw-passagedata><tw-passagedata pid="40" name="Loppu" tags="" position="1200,700" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Loppu" tags="" position="850,375" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
   &lt;h1&gt;Hienoa työtä!&lt;/h1&gt;
   &lt;hr&gt;
 
@@ -3194,9 +2971,8 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/p&gt;
 
  &lt;div class=&quot;intro-nappi-secondary&quot;&gt;
-&lt;a class=&quot;btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaAmmattitutkimus()&quot;&gt;
-  Tyhjennä vastaukset
-&lt;/a&gt;
+&lt;a class=&quot;btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaEsitelma()&quot;&gt;Tyhjennä&lt;/a&gt;
+
 
 &lt;div class=&quot;intro-nappi-main&quot;&gt;
   &lt;span class=&quot;btn-next&quot;&gt;
@@ -3210,7 +2986,8 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="41" name="Asiakaspalvelutesti" tags="" position="300,150" size="100,100">
+</tw-passagedata><tw-passagedata pid="41" name="Asiakaspalvelutesti" tags="" position="400,250" size="100,100">
+  
 &lt;&lt;set $ap = 0&gt;&gt;
 &lt;&lt;set $apMax = 5&gt;&gt;
 &lt;&lt;set $test2Done = false&gt;&gt;
@@ -3236,7 +3013,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;button class=&quot;btn-secondary exit-btn&quot; onclick=&quot;window.confirmExit()&quot;&gt;Poistu&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="42" name="AP Kysymys 1" tags="" position="300,275" size="100,100">
+</tw-passagedata><tw-passagedata pid="42" name="AP Kysymys 1" tags="" position="300,325" size="100,100">
 &lt;div class=&quot;ap-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Asiakaspalvelu&lt;/span&gt;
   &lt;h1&gt;Kun asiakas tulee luoksesi, miten toimit?&lt;/h1&gt;
@@ -3264,7 +3041,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="43" name="AP Oikein 1" tags="" position="237.5,400" size="100,100">
+</tw-passagedata><tw-passagedata pid="43" name="AP Oikein 1" tags="" position="250,425" size="100,100">
 &lt;&lt;set $ap += 1&gt;&gt;
 
 &lt;div class=&quot;ap-page ap-page-correct&quot;&gt;
@@ -3286,7 +3063,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="44" name="AP Väärin 1" tags="" position="375,400" size="100,100">
+</tw-passagedata><tw-passagedata pid="44" name="AP Väärin 1" tags="" position="350,425" size="100,100">
 &lt;div class=&quot;ap-page ap-page-wrong&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Vastaus&lt;/span&gt;
   &lt;h1 class=&quot;ap-result-title&quot;&gt;Tätä voi harjoitella&lt;/h1&gt;
@@ -3307,7 +3084,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
  
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="45" name="AP Kysymys 2" tags="" position="237.5,525" size="100,100">
+</tw-passagedata><tw-passagedata pid="45" name="AP Kysymys 2" tags="" position="275,525" size="100,100">
 &lt;div class=&quot;ap-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Asiakaspalvelu&lt;/span&gt;
   &lt;h1&gt;Miten suhtaudut kärsimättömään asiakkaaseen?&lt;/h1&gt;
@@ -3335,7 +3112,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="46" name="AP Oikein 2" tags="" position="175,650" size="100,100">
+</tw-passagedata><tw-passagedata pid="46" name="AP Oikein 2" tags="" position="225,600" size="100,100">
 &lt;&lt;set $ap += 1&gt;&gt;
 
 &lt;div class=&quot;ap-page ap-page-correct&quot;&gt;
@@ -3356,7 +3133,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="47" name="AP Väärin 2" tags="" position="300,650" size="100,100">
+</tw-passagedata><tw-passagedata pid="47" name="AP Väärin 2" tags="" position="325,600" size="100,100">
 &lt;div class=&quot;ap-page ap-page-wrong&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Vastaus&lt;/span&gt;
   &lt;h1 class=&quot;ap-result-title&quot;&gt;Haastavat tilanteet kuuluvat työhön&lt;/h1&gt;
@@ -3375,7 +3152,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
 
  &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="48" name="AP Kysymys 3" tags="" position="175,775" size="100,100">
+</tw-passagedata><tw-passagedata pid="48" name="AP Kysymys 3" tags="" position="275,700" size="100,100">
 &lt;div class=&quot;ap-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Asiakaspalvelu&lt;/span&gt;
   &lt;h1&gt;Miten tarjoat asiakkaalle lisätuotteita?&lt;/h1&gt;
@@ -3403,7 +3180,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="49" name="AP Oikein 3" tags="" position="125,900" size="100,100">
+</tw-passagedata><tw-passagedata pid="49" name="AP Oikein 3" tags="" position="200,800" size="100,100">
 &lt;&lt;set $ap += 1&gt;&gt;
 
 &lt;div class=&quot;ap-page ap-page-correct&quot;&gt;
@@ -3424,7 +3201,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="50" name="AP Väärin 3" tags="" position="250,900" size="100,100">
+</tw-passagedata><tw-passagedata pid="50" name="AP Väärin 3" tags="" position="300,800" size="100,100">
 &lt;div class=&quot;ap-page ap-page-wrong&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Vastaus&lt;/span&gt;
   &lt;h1 class=&quot;ap-result-title&quot;&gt;Myynnillisyys on taito&lt;/h1&gt;
@@ -3444,7 +3221,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="51" name="AP Kysymys 4" tags="" position="125,1025" size="100,100">
+</tw-passagedata><tw-passagedata pid="51" name="AP Kysymys 4" tags="" position="250,900" size="100,100">
 &lt;div class=&quot;ap-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Asiakaspalvelu&lt;/span&gt;
   &lt;h1&gt;Miten toimit kiireisessä tilanteessa?&lt;/h1&gt;
@@ -3472,7 +3249,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="52" name="AP Oikein 4" tags="" position="62.5,1150" size="100,100">
+</tw-passagedata><tw-passagedata pid="52" name="AP Oikein 4" tags="" position="200,1000" size="100,100">
 &lt;&lt;set $ap += 1&gt;&gt;
 
 &lt;div class=&quot;ap-page ap-page-correct&quot;&gt;
@@ -3494,7 +3271,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="53" name="AP Väärin 4" tags="" position="200,1150" size="100,100">
+</tw-passagedata><tw-passagedata pid="53" name="AP Väärin 4" tags="" position="300,1000" size="100,100">
 &lt;div class=&quot;ap-page ap-page-wrong&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Vastaus&lt;/span&gt;
   &lt;h1 class=&quot;ap-result-title&quot;&gt;Kiire on yhteinen haaste&lt;/h1&gt;
@@ -3515,7 +3292,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="54" name="AP Kysymys 5" tags="" position="62.5,1275" size="100,100">
+</tw-passagedata><tw-passagedata pid="54" name="AP Kysymys 5" tags="" position="250,1100" size="100,100">
 &lt;div class=&quot;ap-page&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Asiakaspalvelu&lt;/span&gt;
   &lt;h1&gt;Miten suhtaudut asiakkaaseen, joka tarvitsee erityistä tukea?&lt;/h1&gt;
@@ -3543,7 +3320,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="55" name="AP Oikein 5" tags="" position="25,1400" size="100,100">
+</tw-passagedata><tw-passagedata pid="55" name="AP Oikein 5" tags="" position="200,1200" size="100,100">
 &lt;&lt;set $ap += 1&gt;&gt;
 
 &lt;div class=&quot;ap-page ap-page-correct&quot;&gt;
@@ -3564,7 +3341,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
   &lt;/span&gt;
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="56" name="AP Väärin 5" tags="" position="150,1400" size="100,100">
+</tw-passagedata><tw-passagedata pid="56" name="AP Väärin 5" tags="" position="300,1200" size="100,100">
 &lt;div class=&quot;ap-page ap-page-wrong&quot;&gt;
   &lt;span class=&quot;badge&quot;&gt;Testi 2 • Vastaus&lt;/span&gt;
   &lt;h1 class=&quot;ap-result-title&quot;&gt;Tukea tarvitseva asiakas on tilaisuus auttaa&lt;/h1&gt;
@@ -3584,7 +3361,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="57" name="AP Yhteenveto" tags="" position="75,1550" size="100,100">&lt;&lt;set $test2Done = true&gt;&gt;
+</tw-passagedata><tw-passagedata pid="57" name="AP Yhteenveto" tags="" position="250,1300" size="100,100">&lt;&lt;set $test2Done = true&gt;&gt;
 &lt;&lt;set _osuus = $ap / $apMax&gt;&gt;
 
 &lt;&lt;set _percent = Math.round(_osuus * 100)&gt;&gt;
@@ -3652,7 +3429,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
   &lt;/div&gt;
    
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="58" name="Testivalikko" tags="" position="475,175" size="100,100">
+</tw-passagedata><tw-passagedata pid="58" name="Testivalikko" tags="" position="475,125" size="100,100">
 &lt;div class=&quot;intro-sivu&quot;&gt;
   &lt;h1&gt;Valitse testi&lt;/h1&gt;
   &lt;hr&gt;
@@ -3695,7 +3472,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
   &lt;/div&gt;
 
   &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="59" name="Tietovisa" tags="" position="525,300" size="100,100">&lt;&lt;set $pisteet = 0&gt;&gt;
+</tw-passagedata><tw-passagedata pid="59" name="Tietovisa" tags="" position="525,225" size="100,100">&lt;&lt;set $pisteet = 0&gt;&gt;
 &lt;&lt;set $q1Done = false&gt;&gt;
 &lt;&lt;set $q2Done = false&gt;&gt;
 &lt;&lt;set $q3Done = false&gt;&gt;
@@ -3733,7 +3510,7 @@ Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit käyttä�
 &lt;/div&gt;
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="60" name="Yhdistetty yhteenveto" tags="" position="100,3150" size="100,100">&lt;&lt;if $test1Done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="60" name="Yhdistetty yhteenveto" tags="" position="350,1575" size="100,100">&lt;&lt;if $test1Done&gt;&gt;
   &lt;&lt;set _osa1 = $pisteet / $maxKysymykset&gt;&gt;
   &lt;&lt;set _percent1 = Math.round(_osa1 * 100)&gt;&gt;
 &lt;&lt;else&gt;&gt;
@@ -3876,7 +3653,7 @@ Muista, että testit ovat vain yksi tapa pohtia omaa suuntaa. Tuloksia voi käyt
     &lt;button class=&quot;btn-secondary exit-btn&quot; onclick=&quot;window.confirmExit()&quot;&gt;Poistu&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="61" name="AP Esittely" tags="" position="850,625" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="61" name="AP Esittely" tags="" position="950,625" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://previews.123rf.com/images/antoniodiaz/antoniodiaz1710/antoniodiaz171000057/88036369-marketing-team-working-together-on-a-computer-and-retouching-photos-for-a-client.jpg&quot;&gt;
@@ -3905,7 +3682,7 @@ Kaupan alalla on monipuolisia tehtäviä: asiakaspalvelusta verkkokauppaan, mark
 
 
 
-</tw-passagedata><tw-passagedata pid="62" name="Myynti" tags="" position="850,700" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="62" name="Myynti" tags="" position="950,700" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://media.sciencephoto.com/f0/30/19/31/f0301931-800px-wm.jpg&quot;&gt;
@@ -3932,7 +3709,7 @@ Työ pitää sisällään myös tuotteiden esillepanon ja hyllytyksen — tärke
   &lt;/span&gt;
 &lt;/div&gt;
 
-</tw-passagedata><tw-passagedata pid="63" name="Verkkokauppa" tags="" position="850,775" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="63" name="Verkkokauppa" tags="" position="950,775" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://freerangestock.com/sample/139876/online-shopping--smartphone-and-laptop-with-virtual-shopping-ca.jpg&quot; alt=&quot;Esimerkki kuva&quot;&gt;
@@ -3962,7 +3739,7 @@ Jos pidät digitaalisesta työympäristöstä, asiakasviestinnästä tai tavaroi
 
 
 
-</tw-passagedata><tw-passagedata pid="64" name="Logistiikka" tags="" position="850,1000" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="64" name="Logistiikka" tags="" position="950,950" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://png.pngtree.com/thumb_back/fh260/background/20240712/pngtree-steel-profile-on-shelves-metal-storage-details-warehouse-in-shop-image_15871369.jpg&quot; alt=&quot;Esimerkki kuva&quot;&gt;
   &lt;div class=&quot;attrib&quot;&gt;
@@ -3988,7 +3765,7 @@ Tämä työ sopii, jos pidät fyysisestä työstä, järjestyksestä ja tavaroid
   &lt;/span&gt;
 &lt;/div&gt;
 
-</tw-passagedata><tw-passagedata pid="65" name="Visuaalinen" tags="" position="850,1100" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="65" name="Visuaalinen" tags="" position="950,1050" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://images.unsplash.com/photo-1441986300917-64674bd600d8?fm=jpg&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdGhpbmclMjBzdG9yZXxlbnwwfHwwfHx8MA%3D%3D&amp;ixlib=rb-4.1.0&amp;q=60&amp;w=3000&quot; alt=&quot;Esimerkki kuva&quot;&gt;
   &lt;div class=&quot;attrib&quot;&gt;
@@ -4015,7 +3792,7 @@ Tämä tehtävä sopii niille, jotka pitävät sommittelusta, visuaalisuudesta j
 &lt;/div&gt;
 
 
-</tw-passagedata><tw-passagedata pid="66" name="Markkinointi" tags="" position="850,875" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="66" name="Markkinointi" tags="" position="950,850" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 &lt;div class=&quot;img-with-attrib-vertical&quot;&gt;
   &lt;img src=&quot;https://plus.unsplash.com/premium_photo-1661963588720-838fd19183ee?fm=jpg&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnJhaW5zdG9ybXxlbnwwfHwwfHx8MA%3D%3D&amp;ixlib=rb-4.1.0&amp;q=60&amp;w=3000&quot; alt=&quot;Esimerkki kuva&quot;&gt;
   &lt;div class=&quot;attrib&quot;&gt;
@@ -4042,7 +3819,7 @@ Jos pidät luovasta työstä, asiakkuuksista tai kaupallisesta ajattelusta — m
 &lt;/div&gt;
 
 
-</tw-passagedata><tw-passagedata pid="67" name="Valintasivu" tags="" position="850,500" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="67" name="Valintasivu" tags="" position="950,525" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 
   &lt;h1&gt;Kaupan ala – mikä sinua kiinnostaa?&lt;/h1&gt;
   &lt;hr&gt;
@@ -4130,7 +3907,7 @@ Kiinnostavatko kampanjat, somesisällöt ja asiakkaiden tarpeiden ymmärtäminen
    
 
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="68" name="Cover" tags="" position="600,50" size="100,100">&lt;&lt;script&gt;&gt;
+</tw-passagedata><tw-passagedata pid="68" name="Cover" tags="" position="500,25" size="100,100">&lt;&lt;script&gt;&gt;
 State.reset();
 &lt;&lt;/script&gt;&gt;
 
@@ -4151,7 +3928,7 @@ $(document).one(&#39;click keypress&#39;, function () {
     Engine.play(&quot;intro-sivu&quot;);
 });
 &lt;&lt;/script&gt;&gt;
-</tw-passagedata><tw-passagedata pid="69" name="Ammatinvalinta" tags="" position="1200,475" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
+</tw-passagedata><tw-passagedata pid="69" name="Ammatinvalinta" tags="" position="850,175" size="100,100">&lt;div class=&quot;story-slide&quot;&gt;
 &lt;h1&gt;Ammattitutkimus - tehtävä&lt;/h1&gt;
 &lt;p&gt;
 Tässä tehtävässä tutustut itse valitsemaasi kaupan alan ammattiin. Tutki ammattia ja mieti samalla, sopisiko tämä työ sinulle. &lt;strong&gt;Tutustu&lt;/strong&gt; ensin kaupan alan ammatteihin ja &lt;strong&gt;valitse &lt;/strong&gt;sitten yksi, jota lähdet tutkimaan. 
