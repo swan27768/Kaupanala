@@ -528,6 +528,190 @@ body.hide-navbar #story {
   align-items: center;
   justify-content: center;
 }
+
+/* ============================================================
+   SAAVUTETTAVUUS: ISOMPI JA SELKEÄMPI TEKSTI
+   ============================================================ */
+
+/* Perusteksti */
+html {
+  font-size: 19px;            /* nostettu 16px → 19px */
+}
+
+/* Pääsisältö */
+#passages .passage {
+  line-height: 1.7;
+}
+
+/* Otsikot */
+#passages h1 {
+  font-size: 2.1rem;
+  line-height: 1.25;
+}
+
+#passages h2 {
+  font-size: 1.6rem;
+}
+
+#passages h3 {
+  font-size: 1.25rem;
+}
+
+/* Painikkeet */
+#passages .btn,
+#passages .action-row a.macro-link {
+  font-size: 1.05rem;
+}
+
+/* Lomakekentät */
+#passages textarea,
+#passages input,
+#passages select {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Vastauksen vaihtoehdot */
+.answer-group a {
+  font-size: 1.05rem;
+}
+
+/* Info- ja huomautuslaatikot */
+.info-text,
+.notice-box {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   RAWTEXT = OIKEA HTML-KAPPALE (TASAPALSTA MAHDOLLINEN)
+   ============================================================ */
+
+.rawtext p {
+  text-align: justify !important;
+  hyphens: auto !important;
+  -webkit-hyphens: auto !important;
+  -ms-hyphens: auto !important;
+}
+#passages .passage .rawtext p {
+  text-align: justify !important;   /* molemmat reunat suorat */
+  text-align-last: justify !important;
+  margin: 0 !important;
+}
+#passages .passage .rawtext {
+  text-align: justify !important;
+}
+var(--brand-dark);
+}
+/* ============================================================
+   ALOITUSSIVU – KAIKKI KORTIT SAMAN KOKOISIKSI
+   ============================================================ */
+
+/* Rivi tasakorkuiseksi */
+.testivalinta-wrap {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.6rem;
+  align-items: stretch;   /* sama korkeus */
+}
+
+/* Kaikki kortit täyttävät rivin korkeuden */
+.testibox,
+.testivalinta-wrap .school-card {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Painike pysyy alhaalla */
+.testibox .action-row,
+.testivalinta-wrap .school-card .action-row {
+  margin-top: auto !important;
+}
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 1.2rem !important;
+  flex-wrap: wrap !important;
+}
+
+
+/* ============================================================
+   SUGARCUBE-LINKIT VIEREKKÄIN
+   ============================================================ */
+
+#passages .action-row a,
+#passages .action-row .macro-link {
+  display: inline-flex !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+/* ============================================================
+   START-NAV – 3 KORTTIA AINA SAMALLE RIVILLE
+   ============================================================ */
+
+.start-nav {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  max-width: 1200px;
+  margin: 2.5rem auto 0 auto;
+  padding: 0;
+}
+
+.start-nav li {
+  background: white;
+  border-radius: 16px;
+  padding: 1.4rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  text-align: center;
+}
+
+/* Mobiili */
+@media (max-width: 900px) {
+  .start-nav {
+    grid-template-columns: 1fr;
+  }
+}
+/* ============================================================
+   NAV-ICONIT
+   ============================================================ */
+
+.nav-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  fill: var(--brand-main);
+  margin: 0 auto 0.6rem auto;
+  display: block;
+}
+/* ============================================================
+   START-NAV – PAINIKELOOK
+   ============================================================ */
+
+.start-nav li a {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-main);
+  color: #fff !important;
+  padding: 0.65rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none !important;
+  margin-top: 0.8rem;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+}
+
+.start-nav li a:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.start-nav li a:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.28);
+}
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= NAVBAR ========= */
 $(document).on(":passagestart", function (event) {
   if (!event || !event.passage) return;
@@ -661,7 +845,31 @@ window.confirmExitStory = function () {
 $(document).on('click', 'a.macro-link.btn--danger', function () {
   SugarCube.Engine.play('Kansi');
 });
-</script><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;script&gt;&gt;
+
+document.addEventListener("passage:render", function () {
+  const wrap = document.querySelector(".testivalinta-wrap");
+  if (!wrap) return;
+
+  const cards = wrap.querySelectorAll(".testibox, .school-card");
+  if (!cards.length) return;
+
+  let maxTop = 0;
+
+  cards.forEach(c => {
+    c.style.marginTop = "0px";
+    const rect = c.getBoundingClientRect();
+    maxTop = Math.max(maxTop, rect.top);
+  });
+
+  cards.forEach(c => {
+    const rect = c.getBoundingClientRect();
+    const diff = maxTop - rect.top;
+    if (diff > 0) {
+      c.style.marginTop = diff + "px";
+    }
+  });
+});
+</script><tw-tag name="Cover" color="green"></tw-tag><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;script&gt;&gt;
 State.reset();
 State.variables.pisteet = 0;
 Engine.play(&quot;start&quot;);
@@ -701,7 +909,7 @@ Engine.play(&quot;start&quot;);
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="600,100" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-    &lt;p&gt;
+    &lt;p class=&quot;info-text rawtext&quot;&gt;
 Kaupan alalla työskennellään muun muassa liike-elämän, taloushallinnon sekä vakuutus- ja rahoitusalan tehtävissä. Työpaikkoja voivat olla esimerkiksi kaupat, yritykset, tilitoimistot, pankit, vakuutusyhtiöt, kirjastot ja erilaiset virastot. Alalla  korostuvat huolellisuus, järjestelmällisyys, yhteistyötaidot, stressinsietokyky ja rohkeus ottaa harkittuja riskejä. Myös asiakaspalvelutaidot ovat keskeisiä – kaupan alalla kohdataan hyvin erilaisia  ihmisiä ja tavoitteena on rakentaa toimivia ja luottamuksellisia asiakassuhteita.
   &lt;/p&gt;
   &lt;div class=&quot;intro-nappi&quot;&gt;
@@ -710,47 +918,35 @@ Kaupan alalla työskennellään muun muassa liike-elämän, taloushallinnon sek�
 &lt;/div&gt;
 &lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Testit: alku" tags="" position="400,325" size="100,100">&lt;div class=&quot;testivalinta-wrap&quot;&gt;
+&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Testit: alku" tags="" position="400,325" size="100,100">&lt;ul class=&quot;start-nav&quot;&gt;
 
-  &lt;div class=&quot;testibox&quot;&gt;
-    &lt;span class=&quot;badge&quot;&gt;TESTI 1&lt;/span&gt;
-    &lt;h2&gt;Sopiiko kaupan ala sinulle?&lt;/h2&gt;
-    &lt;p&gt;
-10 kysymystä kaupan alan ammateista, työympäristöistä ja osaamisalueista. Saat arvion tiedollisesta soveltuvuudestasi.
-    &lt;/p&gt;
-    &lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Aloita tietovisa&quot; &quot;Kysymys 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
+&lt;li&gt;
+  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
+    &lt;path d=&quot;M4 4h16v12H4zM2 18h20v2H2z&quot;&gt;&lt;/path&gt;
+  &lt;/svg&gt;
+  &lt;span class=&quot;badge&quot;&gt;TESTI 1&lt;/span&gt;
+  &lt;h2&gt;Tietovisa&lt;/h2&gt;
+  &lt;&lt;link &quot;Aloita&quot; &quot;Kysymys 1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
 
-  &lt;/div&gt;
-  &lt;div class=&quot;testibox&quot;&gt;
-    &lt;span class=&quot;badge&quot;&gt;TESTI 2&lt;/span&gt;
-    &lt;h2&gt;Millainen asiakaspalvelija olet?&lt;/h2&gt;
-    &lt;p&gt;
-      5 tilannekysymystä asiakaspalvelutilanteista. Saat henkilökohtaisen palveluprofiilin.
-    &lt;/p&gt;
-    &lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Aloita asiakaspalvelutesti&quot; &quot;AP 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;school-card&quot;&gt;
-  &lt;span class=&quot;badge&quot;&gt;TEHTÄVÄ&lt;/span&gt;
-  &lt;h2&gt;Ammattitutkimustehtävä&lt;/h2&gt;
-  &lt;p&gt;
-    Valitse ensin sinua kiinnostava kaupan alan ammatti. 
-    Selvitä koulutuspolku, työtehtävät, vahvuutesi ja pohdi, sopisiko ala sinulle.
-    Lopuksi laadit oman esitelmän vastauksiesi pohjalta.
-  &lt;/p&gt;
+&lt;li&gt;
+  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
+    &lt;path d=&quot;M12 2a5 5 0 015 5v1h2v12H5V8h2V7a5 5 0 015-5z&quot;&gt;&lt;/path&gt;
+  &lt;/svg&gt;
+  &lt;span class=&quot;badge&quot;&gt;TESTI 2&lt;/span&gt;
+  &lt;h2&gt;Asiakaspalvelutesti&lt;/h2&gt;
+  &lt;&lt;link &quot;Aloita&quot; &quot;AP 1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
 
-  &lt;div class=&quot;action-row&quot;&gt;
-    &lt;&lt;link &quot;Siirry ammattitehtävään&quot; &quot;Ammattitehtävä&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
+&lt;li&gt;
+  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
+    &lt;path d=&quot;M6 2h9l5 5v15H6z&quot;&gt;&lt;/path&gt;
+  &lt;/svg&gt;
+  &lt;h2&gt;Ammatti-tutkimustehtävä&lt;/h2&gt;
+  &lt;&lt;link &quot;Siirry&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/li&gt;
 
-&lt;/div&gt;
+&lt;/ul&gt;
 </tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
@@ -935,13 +1131,11 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/if&gt;&gt;
 
 &lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Takaisin valikkoon&quot; &quot;Testit: alku&quot;&gt;&gt;
+&lt;&lt;link &quot;Jatka&quot; &quot;AP 1&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="16" name="AP 1" tags="" position="625,350" size="100,100">&lt;&lt;set $ap = 0&gt;&gt;
 &lt;h1&gt;Millainen asiakaspalvelija olet?&lt;/h1&gt;
-&lt;p&gt;Vastaa kysymykseen ja saat henkilökohtaisen palveluprofiilisi.&lt;/p&gt;
-&lt;h3&gt;Tilanne 1 / 5&lt;/h3&gt;
 &lt;h2&gt;Kun asiakas tulee luoksesi, miten toimit?&lt;/h2&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
@@ -995,13 +1189,6 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="19" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;h1&gt;Valitse ammatti&lt;/h1&gt;
 
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Tutustu ensin kaupan alan koulutuksiin ennen kuin aloitat oman ammattitehtäväsi.&lt;/strong&gt;&lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;[[Tutustu kaupan alan koulutuksiin-&gt;Oppilaitokset]]&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;hr&gt;
-
 &lt;h2&gt;Myynnin ja asiakaspalvelun ammatit&lt;/h2&gt;
 &lt;div class=&quot;answer-group&quot;&gt;
 &lt;&lt;link &quot;Myyjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Myyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
@@ -1009,7 +1196,6 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;link &quot;Kassamyyjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kassamyyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Myyntineuvottelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Myyntineuvottelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
 &lt;h2&gt;Markkinoinnin ja viestinnän ammatit&lt;/h2&gt;
 &lt;div class=&quot;answer-group&quot;&gt;
 &lt;&lt;link &quot;Markkinointiassistentti&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Markkinointiassistentti&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
@@ -1017,7 +1203,6 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;link &quot;Sisällöntuottaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Sisällöntuottaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Visuaalinen myynninedistäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Visuaalinen myynninedistäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
 &lt;h2&gt;Taloushallinnon ammatit&lt;/h2&gt;
 &lt;div class=&quot;answer-group&quot;&gt;
 &lt;&lt;link &quot;Kirjanpitäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kirjanpitäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
@@ -1054,19 +1239,122 @@ Jatka rohkeasti tutustumista eri ammatteihin ja koulutuksiin – tulevaisuus on 
     &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Oppilaitokset" tags="" position="850,300" size="100,100">&lt;h1&gt;Kaupan alan koulutukset&lt;/h1&gt;
+</tw-passagedata><tw-passagedata pid="21" name="Esitelmäpohja" tags="" position="925,575" size="100,100">&lt;&lt;set _tmp = setTimeout(window.initAmmattiAutosave, 150)&gt;&gt;
+
+&lt;h2&gt;Esitelmä ammatista: &lt;&lt;print $ammatti&gt;&gt;&lt;/h2&gt;
+
+&lt;p&gt;Vastaa kysymyksiin mahdollisimman konkreettisesti ja &lt;strong&gt;omin sanoin&lt;/strong&gt;.  
+Lopuksi saat vastauksistasi yhteenvedon, jonka voit ladata tiedostona ja kopioida Google Docsiin tai Google Slidesiin viimeistelyä varten.&lt;/p&gt;
+
+&lt;div class=&quot;lomake-ryhma&quot;&gt;
+&lt;p&gt;&lt;strong&gt;1. Mikä koulutus ja oppilaitos johtaa tähän ammattiin?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;koulutusPolku&quot; placeholder=&quot;Missä tätä voi opiskella? Mitä osaamista tarvitaan?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;2. Miltä tuntuisivat työtehtävät ja työpäivät tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;tyotehtavat&quot; placeholder=&quot;Mitä työssä tehdään? Millaiset työajat?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;3. Missä tätä työtä voisi tehdä?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;tyopaikat&quot; placeholder=&quot;Myymälä, verkkokauppa, varasto, toimisto...&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;4. Mitkä omat taidot ja ominaisuudet sopisivat tähän ammattiin?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;vahvuudet&quot; placeholder=&quot;Missä olet hyvä? Mikä osa työstä voisi olla sinulle helppoa?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;5. Mitkä asiat tässä ammatissa voisivat olla hyviä?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;hyvatPuolet&quot; placeholder=&quot;Mikä olisi kivaa tai motivoivaa?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;6. Mikä voisi olla haastavaa tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;haasteet&quot; placeholder=&quot;Kiire, vuorotyö, vastuu, stressi...&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;7. Miltä palkkaus ja työehdot vaikuttavat?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;palkkaus&quot; placeholder=&quot;Riittäisikö palkka omiin menoihin?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;8. Miltä tuntuisi kokeilla työtä tai harjoittelua tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;harjoittelu&quot; placeholder=&quot;Mitä luulet oppivasi?&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;&lt;strong&gt;9. Yhteenveto – sopisiko tämä työ sinulle?&lt;/strong&gt;&lt;/p&gt;
+&lt;textarea id=&quot;yhteenveto&quot; placeholder=&quot;Perustele rehellisesti oma näkemyksesi&quot;&gt;&lt;/textarea&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+
+&lt;a class=&quot;macro-link btn-primary&quot;
+   href=&quot;javascript:void(0)&quot;
+   onclick=&quot;downloadAmmattitutkimus()&quot;&gt;
+   Lataa vastaukset
+&lt;/a&gt;
+
+&lt;a class=&quot;macro-link btn-secondary&quot;
+   href=&quot;javascript:void(0)&quot;
+   onclick=&quot;resetAmmattitutkimus()&quot;&gt;
+   Tyhjennä
+&lt;/a&gt;
+
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="22" name="AP 4" tags="" position="625,725" size="100,100">&lt;h3&gt;Tilanne 4 / 5&lt;/h3&gt;
+&lt;h2&gt;Miten toimit kiireisessä tilanteessa?&lt;/h2&gt;
+
+&lt;div class=&quot;answer-group&quot;&gt;
+&lt;&lt;link &quot;Pyydän apua ja autan muita samalla&quot;&gt;&gt;
+  &lt;&lt;set $ap += 1&gt;&gt;
+  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;&lt;link &quot;Teen vain oman osuuteni ja jätän muut selviytymään&quot;&gt;&gt;
+  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;&lt;link &quot;Vetäydyn taka-alalle&quot;&gt;&gt;
+  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="23" name="AP 5" tags="" position="625,850" size="100,100">&lt;h3&gt;Tilanne 5 / 5&lt;/h3&gt;
+&lt;h2&gt;Miten suhtaudut asiakkaaseen, joka tarvitsee erityistä tukea?&lt;/h2&gt;
+
+&lt;div class=&quot;answer-group&quot;&gt;
+&lt;&lt;link &quot;Kuuntelen ja mukautan palvelun asiakkaan tarpeisiin&quot;&gt;&gt;
+  &lt;&lt;set $ap += 1&gt;&gt;
+  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;&lt;link &quot;Olen asiallinen mutta en tee mitään ylimääräistä&quot;&gt;&gt;
+  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+
+&lt;&lt;link &quot;Koen tilanteen ärsyttäväksi&quot;&gt;&gt;
+  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="24" name="AP Tulos" tags="" position="625,975" size="100,100">&lt;h1&gt;Palveluprofiilisi&lt;/h1&gt;
+
+&lt;p&gt;Sait &lt;strong&gt;$ap / 5 pistettä&lt;/strong&gt;&lt;/p&gt;
+
+&lt;&lt;if $ap == 5&gt;&gt;
+&lt;p class=&quot;highlight&quot;&gt;Huippupalvelija – asiakaslähtöisyys on sinulle luontaista.&lt;/p&gt;
+&lt;&lt;elseif $ap &gt;= 3&gt;&gt;
+&lt;p class=&quot;highlight&quot;&gt;Hyvä asiakaspalvelija – sinulla on erinomaiset lähtökohdat alalle.&lt;/p&gt;
+&lt;&lt;else&gt;&gt;
+&lt;p class=&quot;highlight&quot;&gt;Palvelutaitoja kannattaa vielä harjoitella – kehityt nopeasti.&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;div class=&quot;action-row&quot;&gt;
+&lt;&lt;link &quot;Tutustu kauppa-alan koulutuksiin&quot; &quot;Toinen aste&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="25" name="Toinen aste" tags="" position="825,300" size="100,100">
+&lt;h1&gt;Kaupan alan toisen asteen oppilaitokset&lt;/h1&gt;
 
 &lt;div class=&quot;info-text&quot;&gt;
   &lt;p&gt;&lt;strong&gt;Huom!&lt;/strong&gt; Tällä sivulla esitellyt koulutukset ovat esimerkkejä. Koulutustarjonta ja hakukohteet voivat muuttua. Varmista ajantasaiset tiedot opinto-ohjaajaltasi ja oppilaitosten omilta sivuilta.&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;p&gt;
-Kaupan alaa voi opiskella monella tasolla – toiselta asteelta aina ammattikorkeakouluun ja yliopistoon asti.
+Toisen asteen opinnoissa suoritetaan useimmiten &lt;strong&gt;liiketoiminnan perustutkinto (merkonomi)&lt;/strong&gt;. Opinnot painottuvat käytännönläheiseen asiakaspalveluun, myyntiin ja työelämävalmiuksiin.
 &lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Toisen asteen koulutukset (merkonomi)&lt;/h2&gt;
 
 &lt;div class=&quot;menu-grid&quot;&gt;
 
@@ -1122,12 +1410,16 @@ Kaupan alaa voi opiskella monella tasolla – toiselta asteelta aina ammattikork
 
 &lt;/div&gt;
 
-&lt;hr&gt;
+&lt;div class=&quot;action-row&quot;&gt;
+&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry korkeakouluihin&quot; &quot;Korkeakoulut&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Jatka ammattitehtävään&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="26" name="Korkeakoulut" tags="" position="950,300" size="100,100">&lt;h1&gt;Kaupan alan korkeakoulut&lt;/h1&gt;
 
-&lt;h2&gt;Ammattikorkeakoulu (Tradenomi)&lt;/h2&gt;
-
+&lt;p&gt;
+Korkeakouluopinnoissa suoritetaan useimmiten &lt;strong&gt;tradenomin&lt;/strong&gt; tai &lt;strong&gt;kauppatieteiden&lt;/strong&gt; tutkintoja. Opinnoissa voi suuntautua esimerkiksi myyntiin, markkinointiin, taloushallintoon, johtamiseen tai kansainväliseen liiketoimintaan.
+&lt;/p&gt;
+&lt;h2&gt;Ammattikorkeakoulut (Tradenomi)&lt;/h2&gt;
 &lt;div class=&quot;menu-grid&quot;&gt;
-
   &lt;div class=&quot;school-card&quot;&gt;
     &lt;h3&gt;Haaga-Helia&lt;/h3&gt;
     &lt;ul&gt;
@@ -1136,7 +1428,6 @@ Kaupan alaa voi opiskella monella tasolla – toiselta asteelta aina ammattikork
     &lt;/ul&gt;
     &lt;a class=&quot;external-link&quot; href=&quot;https://www.haaga-helia.fi&quot; target=&quot;_blank&quot;&gt;Siirry Haaga-Helian sivuille&lt;/a&gt;
   &lt;/div&gt;
-
   &lt;div class=&quot;school-card&quot;&gt;
     &lt;h3&gt;Laurea&lt;/h3&gt;
     &lt;ul&gt;
@@ -1155,15 +1446,9 @@ Kaupan alaa voi opiskella monella tasolla – toiselta asteelta aina ammattikork
     &lt;/ul&gt;
     &lt;a class=&quot;external-link&quot; href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Hae koulutuksia Opintopolusta&lt;/a&gt;
   &lt;/div&gt;
-
 &lt;/div&gt;
-
-&lt;hr&gt;
-
 &lt;h2&gt;Yliopistot (kauppakorkeakoulut)&lt;/h2&gt;
-
 &lt;div class=&quot;menu-grid&quot;&gt;
-
   &lt;div class=&quot;school-card&quot;&gt;
     &lt;h3&gt;Aalto-yliopisto&lt;/h3&gt;
     &lt;ul&gt;
@@ -1190,117 +1475,8 @@ Kaupan alaa voi opiskella monella tasolla – toiselta asteelta aina ammattikork
   &lt;/div&gt;
 
 &lt;/div&gt;
-
 &lt;div class=&quot;action-row&quot;&gt;
-[[Takaisin tehtävään-&gt;Ammattitehtävä]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Esitelmäpohja" tags="" position="925,575" size="100,100">&lt;&lt;set _tmp = setTimeout(window.initAmmattiAutosave, 150)&gt;&gt;
-
-&lt;h2&gt;Esitelmä ammatista: &lt;&lt;print $ammatti&gt;&gt;&lt;/h2&gt;
-
-&lt;p&gt;Täytä alle tiedot valitsemastasi ammatista.&lt;/p&gt;
-&lt;p&gt;Vastaa kysymyksiin mahdollisimman konkreettisesti ja &lt;strong&gt;omin sanoin&lt;/strong&gt;.  
-Lopuksi saat vastauksistasi yhteenvedon, jonka voit ladata tiedostona ja kopioida Google Docsiin tai Google Slidesiin viimeistelyä varten.&lt;/p&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Mikä koulutus ja oppilaitos johtaa tähän ammattiin?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;koulutusPolku&quot; placeholder=&quot;Missä tätä voi opiskella? Mitä osaamista tarvitaan?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Miltä tuntuisivat työtehtävät ja työpäivät tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;tyotehtavat&quot; placeholder=&quot;Mitä työssä tehdään? Millaiset työajat?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Missä tätä työtä voisi tehdä?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;tyopaikat&quot; placeholder=&quot;Myymälä, verkkokauppa, varasto, toimisto...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;4. Mitkä omat taidot ja ominaisuudet sopisivat tähän ammattiin?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;vahvuudet&quot; placeholder=&quot;Missä olet hyvä? Mikä osa työstä voisi olla sinulle helppoa?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;5. Mitkä asiat tässä ammatissa voisivat olla hyviä?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;hyvatPuolet&quot; placeholder=&quot;Mikä olisi kivaa tai motivoivaa?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;6. Mikä voisi olla haastavaa tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;haasteet&quot; placeholder=&quot;Kiire, vuorotyö, vastuu, stressi...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;7. Miltä palkkaus ja työehdot vaikuttavat?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;palkkaus&quot; placeholder=&quot;Riittäisikö palkka omiin menoihin?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;8. Miltä tuntuisi kokeilla työtä tai harjoittelua tässä ammatissa?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;harjoittelu&quot; placeholder=&quot;Mitä luulet oppivasi?&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;9. Yhteenveto – sopisiko tämä työ sinulle?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;yhteenveto&quot; placeholder=&quot;Perustele rehellisesti oma näkemyksesi&quot;&gt;&lt;/textarea&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;intro-nappi action-row&quot;&gt;
-
-&lt;a class=&quot;macro-link btn-primary&quot;
-   href=&quot;javascript:void(0)&quot;
-   onclick=&quot;downloadAmmattitutkimus()&quot;&gt;
-   Lataa vastaukset
-&lt;/a&gt;
-
-&lt;a class=&quot;macro-link btn-secondary&quot;
-   href=&quot;javascript:void(0)&quot;
-   onclick=&quot;resetAmmattitutkimus()&quot;&gt;
-   Tyhjennä
-&lt;/a&gt;
-
-&lt;&lt;link &quot;Valmis&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="AP 4" tags="" position="625,725" size="100,100">&lt;h3&gt;Tilanne 4 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten toimit kiireisessä tilanteessa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Pyydän apua ja autan muita samalla&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Teen vain oman osuuteni ja jätän muut selviytymään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vetäydyn taka-alalle&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="AP 5" tags="" position="625,850" size="100,100">&lt;h3&gt;Tilanne 5 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten suhtaudut asiakkaaseen, joka tarvitsee erityistä tukea?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kuuntelen ja mukautan palvelun asiakkaan tarpeisiin&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Olen asiallinen mutta en tee mitään ylimääräistä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Koen tilanteen ärsyttäväksi&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="AP Tulos" tags="" position="625,975" size="100,100">&lt;h1&gt;Palveluprofiilisi&lt;/h1&gt;
-
-&lt;p&gt;Sait &lt;strong&gt;$ap / 5 pistettä&lt;/strong&gt;&lt;/p&gt;
-
-&lt;&lt;if $ap == 5&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Huippupalvelija – asiakaslähtöisyys on sinulle luontaista.&lt;/p&gt;
-&lt;&lt;elseif $ap &gt;= 3&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Hyvä asiakaspalvelija – sinulla on erinomaiset lähtökohdat alalle.&lt;/p&gt;
-&lt;&lt;else&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Palvelutaitoja kannattaa vielä harjoitella – kehityt nopeasti.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Takaisin valikkoon&quot; &quot;Testit: alku&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
+&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry toisen asteen koulutuksiin&quot; &quot;Toinen aste&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Jatka ammattitehtävään&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
